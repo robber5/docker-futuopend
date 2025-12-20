@@ -21,7 +21,8 @@ ADD opendctl.sh /usr/local/bin/opendctl.sh
 RUN chmod +x /usr/local/bin/opendctl.sh
 
 # 下载和安装 FutuOpenD
-ENV FUTU_OPEND_VERSION=9.3.5308
+ARG FUTU_OPEND_VERSION=9.3.5308
+ENV FUTU_OPEND_VERSION=${FUTU_OPEND_VERSION}
 
 # 使用最新的下载地址
 RUN wget -O FutuOpenD.tar.gz "https://softwaredownload.futunn.com/Futu_OpenD_${FUTU_OPEND_VERSION}_Ubuntu16.04.tar.gz" \

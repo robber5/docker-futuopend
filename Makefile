@@ -1,9 +1,20 @@
-IMAGE ?= futuopend:amd64
+FUTU_OPEND_VERSION ?= 9.3.5308
+IMAGE ?= futuopend:$(FUTU_OPEND_VERSION)
 CONTAINER ?= futuopend
 
+# 检测当前系统架构
+ARCH := $(shell uname -m)
+
 build:
-	echo "building docker image"
-	docker buildx build --platform linux/amd64 -t $(IMAGE) --load .
+	@echo "当前系统架构: $(ARCH)"
+	@echo "FutuOpenD 版本: $(FUTU_OPEND_VERSION)"
+ifeq ($(ARCH),x86_64)
+	@echo "检测到 AMD64 架构，本地构建"
+	docker buildx build --build-arg FUTU_OPEND_VERSION=$(FUTU_OPEND_VERSION) -t $(IMAGE) --load .
+else
+	@echo "检测到非 AMD64 架构 ($(ARCH))，执行跨平台构建"
+	docker buildx build --platform linux/amd64 --build-arg FUTU_OPEND_VERSION=$(FUTU_OPEND_VERSION) -t $(IMAGE) --load .
+endif
 
 run:
 	echo "running docker image"
